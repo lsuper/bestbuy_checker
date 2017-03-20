@@ -1,3 +1,2 @@
-smtplib
 requests
 bs4
