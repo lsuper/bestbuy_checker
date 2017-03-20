@@ -2,7 +2,29 @@ from bs4 import BeautifulSoup
 import requests
 import time
 import sys
+import smtplib
+import string
 
+mail_server = smtplib.SMTP('localhost', 25)
+DEFAULT_RECEIPIENT = 'tigger@applet.ifttt.com'
+YOUR_EMAIL= ''
+def send_email(receipient, subject, text):
+    SMTPserver = "smtp.com"
+    # To is a comma-separated list
+    From = YOUR_EMAIL
+    To = receipient
+    Subj = subject
+    Text = text
+    Body = string.join((
+    "From: %s" % From,
+    "To: %s" % To,
+    "Subject: %s" % Subj,
+    "",
+    Text,
+    ), "\r\n")
+    mail_server.sendmail(From,[To],Body)
+
+mail_server.sendmail('song.macbook','lsupperx@gmail.com','title\nxxxx')
 headers_list = [
     {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'},
     {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.24 (KHTML, like Gecko) Chrome/56.0.2924.82 Safari/537.32'},
@@ -44,7 +66,8 @@ while True:
         soup = BeautifulSoup(html, 'html.parser')
         result = soup.find_all(attrs = {'data-button-state-id':'ADD_TO_CART'})
         if result:
-            print "BUY %s NOW!"%product_skuids[skuid]
+            print 'BUY %s NOW!'%product_skuids[skuid]
             print url
+            send_email(DEFAULT_RECEIPIENT, '#bestbuyBUY!', url)
             skuids.remove(skuid)
     time.sleep(sleep_secs) 
